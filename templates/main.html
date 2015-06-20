@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+    <head lang="en">
+        <meta charset="UTF-8">
+        <title>SmartNinja basic Jinja template</title>
+
+        <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+        <link rel="stylesheet" href="/assets/css/style.css">
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+        <script src="/assets/js/bootstrap.min.js"></script>
+        <script src="/assets/js/main.js"></script>
+    </head>
+
+    <body>
+        <div class="container">
+            <h1>Kalkem</h1>
+
+            <div class="input-group">
+                <input class="form-control" placeholder="Total volume" id="totalVolume">
+            </div>
+
+            <br>
+            <br>
+
+            <div class="input-group">
+                <input class="form-control" placeholder="Component name" id="componentName">
+                <br>
+                <br>
+                <input class="form-control" placeholder="Stock concentration" id="stockCon">
+                <br>
+                <br>
+                <input class="form-control" placeholder="Desired concentration" id="desiredCon">
+            </div>
+
+
+            <hr>
+
+            <div class="input-group">
+                <span class="input-group-btn">
+                    <button id="calculateButton" class="btn btn-primary">Calculate</button>
+                </span>
+                <input class="form-control" placeholder="Desired volume/mass" id="desiredResult">
+            </div>
+        </div>
+    </body>
+</html>
