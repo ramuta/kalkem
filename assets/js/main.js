@@ -1,12 +1,16 @@
 $(document).ready(function() {
-    // unit swap for component #1
+    // unit swap for component #1 when site reloaded
     var sConUnit = $("#stockConcentrationUnit1");
     var desConUnit = $("#desiredConcentrationUnit1");
 
     desConUnit.text(sConUnit.val());
 
-    sConUnit.change(function() {
-        desConUnit.text(sConUnit.val());
+    // unit swap for all components
+    $(document).on('change', '.scu', function() {
+        for(var i = 1; i < componentCounter+1; i++) {
+            var localStockConUnit = $("#stockConcentrationUnit"+i).val();
+            $("#desiredConcentrationUnit"+i).text(localStockConUnit);
+        }
     });
 
     // add new component
@@ -28,43 +32,52 @@ $(document).ready(function() {
                         '</div>' +
 
                         '<div class="col-xs-5">' +
-                            '<select class="form-control" id="stockConcentrationUnit' + componentCounter +'">' +
+                            '<select class="form-control scu" id="stockConcentrationUnit' + componentCounter +'">' +
                                 '<option>%</option>' +
                                 '<option>M</option>' +
                             '</select>' +
                         '</div>' +
                     '</div>' +
 
-                    '<div class="row form-group">' +
+                    '<div class="row form-group desired">' +
                         '<div class="col-xs-7">' +
                             '<input class="form-control" placeholder="Desired concentration" id="desiredCon' + componentCounter +'">' +
                         '</div>' +
 
                         '<div class="col-xs-5">' +
-                            '<p class="form-control-static" id="desiredConcentrationUnit' + componentCounter +'">%</p>' +
+                            '<p class="form-control-static dcu" id="desiredConcentrationUnit' + componentCounter +'">%</p>' +
                         '</div>' +
                     '</div>' +
-                '</div><!-- End component #' + componentCounter + ' + -->');
+                '</div><!-- End component #' + componentCounter + ' + -->'); // end wrapper append
     });
 
     // calculation
     $("#calculateButton").click(function() {
-        var totalVol = parseFloat($("#totalVolume").val());
+        var totalVol = $("#totalVolume").val();
+        totalVol = parseFloat(totalVol.replace(",", ".")); // replace decimal comma with the decimal dot
         var totalVolUnit = $("#totalVolumeUnit").val();
         var resultDiv = $("#result");
         resultDiv.empty();
 
+        var volumeLeft = totalVol;
+
         for(var i = 1; i < componentCounter+1; i++) {
             var comName = $("#componentName"+i).val();
-            var stockCon = parseFloat($("#stockCon"+i).val());
-            var desiredCon = parseFloat($("#desiredCon"+i).val());
+            var stockCon = $("#stockCon"+i).val();
+            stockCon = parseFloat(stockCon.replace(",", ".")); // replace decimal comma with the decimal dot
+            var desiredCon = $("#desiredCon"+i).val();
+            desiredCon = parseFloat(desiredCon.replace(",", ".")); // replace decimal comma with the decimal dot
 
             var calc = (totalVol/stockCon) * desiredCon;
 
             $("#desiredResult").val(calc);
 
-            resultDiv.append("<p>" + comName + " = " + calc + " " + totalVolUnit + "</p>");
+            resultDiv.append("<p>" + comName + " = " + calc.toFixed(4) + " " + totalVolUnit + "</p>");
+
+            volumeLeft -= calc;
         }
+
+        resultDiv.append("<p><strong>Total volume left = " + volumeLeft.toFixed(4) + " " + totalVolUnit + "</strong></p>");
     });
 
 
