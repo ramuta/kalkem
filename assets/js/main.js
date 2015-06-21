@@ -22,7 +22,7 @@ $(document).ready(function() {
 
         wrapper.append('<!-- Component #' + componentCounter +' -->' +
                 '<div class="col-md-4 form-group well">' +
-                    '<h4>Component #' + componentCounter +'</h4>'+
+                    '<h4>Component #' + componentCounter + '<a href="#" class="remove-component pull-right label label-danger">remove</a>' + '</h4>' +
                     '<input class="form-control" placeholder="Component name" id="componentName' + componentCounter +'">'+
                     '<br>'+
 
@@ -51,11 +51,24 @@ $(document).ready(function() {
                 '</div><!-- End component #' + componentCounter + ' + -->'); // end wrapper append
     });
 
+    // remove component
+    $(wrapper).on("click",".remove-component", function(e){ //user click on remove text
+        $(this).parent().parent('div').remove();
+        componentCounter--;
+    });
+
     // calculation
     $("#calculateButton").click(function() {
         var totalVol = $("#totalVolume").val();
+
+        if(!totalVol){
+            alert("Total volume field is empty.")
+        }
+
         totalVol = parseFloat(totalVol.replace(",", ".")); // replace decimal comma with the decimal dot
+
         var totalVolUnit = $("#totalVolumeUnit").val();
+
         var resultDiv = $("#result");
         resultDiv.empty();
 
