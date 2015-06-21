@@ -64,21 +64,21 @@
             </div><!-- End total volume -->
 
             <!-- Components -->
-            <div class="row components-wrapper">
+            <div class="row" id="componentsWrapper">
 
                 <!-- Component #1 -->
                 <div class="col-md-4 form-group well">
                     <h4>Component #1</h4>
-                    <input class="form-control" placeholder="Component name" id="componentName">
+                    <input class="form-control" placeholder="Component name" id="componentName1">
                     <br>
 
                     <div class="row form-group">
                         <div class="col-xs-7">
-                            <input class="form-control" placeholder="Stock concentration" id="stockCon">
+                            <input class="form-control" placeholder="Stock concentration" id="stockCon1">
                         </div>
 
                         <div class="col-xs-5">
-                            <select class="form-control" id="concentrationUnit1">
+                            <select class="form-control" id="stockConcentrationUnit1">
                                 <option>%</option>
                                 <option>M</option>
                             </select>
@@ -87,17 +87,17 @@
 
                     <div class="row form-group">
                         <div class="col-xs-7">
-                            <input class="form-control" placeholder="Desired concentration" id="desiredCon">
+                            <input class="form-control" placeholder="Desired concentration" id="desiredCon1">
                         </div>
 
                         <div class="col-xs-5">
-                            <p class="form-control-static" id="concentrationUnit2">%</p>
+                            <p class="form-control-static" id="desiredConcentrationUnit1">%</p>
                         </div>
                     </div>
                 </div><!-- End component #1 -->
             </div><!-- End total volume -->
 
-            <button class="btn btn-warning">Add new component</button>
+            <button class="btn btn-warning" id="addComponent">Add new component</button>
 
             <hr>
 
