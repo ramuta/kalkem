@@ -22,7 +22,7 @@ $(document).ready(function() {
 
         wrapper.append('<!-- Component #' + componentCounter +' -->' +
                 '<div class="col-md-4 form-group well">' +
-                    '<h4>Component #' + componentCounter + '<a href="#" class="remove-component pull-right label label-danger">remove</a>' + '</h4>' +
+                    '<h4>Component #' + componentCounter + '<a class="remove-component pull-right label label-danger">remove</a>' + '</h4>' +
                     '<input class="form-control" placeholder="Component name" id="componentName' + componentCounter +'">'+
                     '<br>'+
 
@@ -52,42 +52,52 @@ $(document).ready(function() {
     });
 
     // remove component
-    $(wrapper).on("click",".remove-component", function(e){ //user click on remove text
+    $(wrapper).on("click",".remove-component", function(e){
         $(this).parent().parent('div').remove();
         componentCounter--;
     });
 
     // calculation
     $("#calculateButton").click(function() {
+        var resultDiv = $("#result");
+        resultDiv.empty();
+
+        resultDiv.append("<h4>Results</h4>");
+
         var totalVol = $("#totalVolume").val();
 
         if(!totalVol){
-            alert("Total volume field is empty.")
+            resultDiv.append("<p class='error-text'>Error: Total volume field is empty.")
         }
 
         totalVol = parseFloat(totalVol.replace(",", ".")); // replace decimal comma with the decimal dot
 
         var totalVolUnit = $("#totalVolumeUnit").val();
 
-        var resultDiv = $("#result");
-        resultDiv.empty();
+
 
         var volumeLeft = totalVol;
 
         for(var i = 1; i < componentCounter+1; i++) {
             var comName = $("#componentName"+i).val();
             var stockCon = $("#stockCon"+i).val();
-            stockCon = parseFloat(stockCon.replace(",", ".")); // replace decimal comma with the decimal dot
             var desiredCon = $("#desiredCon"+i).val();
-            desiredCon = parseFloat(desiredCon.replace(",", ".")); // replace decimal comma with the decimal dot
 
-            var calc = (totalVol/stockCon) * desiredCon;
+            if(comName && stockCon && desiredCon) {
+                stockCon = parseFloat(stockCon.replace(",", ".")); // replace decimal comma with the decimal dot
 
-            $("#desiredResult").val(calc);
+                desiredCon = parseFloat(desiredCon.replace(",", ".")); // replace decimal comma with the decimal dot
 
-            resultDiv.append("<p>" + comName + " = " + calc.toFixed(4) + " " + totalVolUnit + "</p>");
+                var calc = (totalVol/stockCon) * desiredCon;
 
-            volumeLeft -= calc;
+                $("#desiredResult").val(calc);
+
+                resultDiv.append("<p>" + comName + " = " + calc.toFixed(4) + " " + totalVolUnit + "</p>");
+
+                volumeLeft -= calc;
+            } else {
+                resultDiv.append("<p class='error-text'>Error: Some of the Component #" + i + " fields are empty... please fill all the fields.</p>");
+            }
         }
 
         resultDiv.append("<p><strong>Total volume left = " + volumeLeft.toFixed(4) + " " + totalVolUnit + "</strong></p>");
