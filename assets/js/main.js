@@ -5,6 +5,14 @@ $(document).ready(function() {
 
     desConUnit.text(sConUnit.val());
 
+    var volLeftCheckbox = $("#calcVolumeLeft");
+    volLeftCheckbox.prop('checked', false);
+    var volLeftCheckboxDiv = $("#volLeftCheckboxDiv");
+    volLeftCheckboxDiv.hide();
+    var resultVolumeLeftDiv = $("#resultVolumeLeft");
+    var volumeLeft = 0;
+    var totalVolUnit;
+
     // unit swap for all components
     $(document).on('change', '.scu', function() {
         for(var i = 1; i < componentCounter+1; i++) {
@@ -33,7 +41,8 @@ $(document).ready(function() {
 
                         '<div class="col-xs-5">' +
                             '<select class="form-control scu" id="stockConcentrationUnit' + componentCounter +'">' +
-                                '<option>%</option>' +
+                                '<option>% (weight/volume)</option>' +
+                                '<option>% (volume/volume)</option>' +
                                 '<option>M</option>' +
                             '</select>' +
                         '</div>' +
@@ -45,7 +54,7 @@ $(document).ready(function() {
                         '</div>' +
 
                         '<div class="col-xs-5">' +
-                            '<p class="form-control-static dcu" id="desiredConcentrationUnit' + componentCounter +'">%</p>' +
+                            '<p class="form-control-static dcu" id="desiredConcentrationUnit' + componentCounter +'">% (weight/volume)</p>' +
                         '</div>' +
                     '</div>' +
                 '</div><!-- End component #' + componentCounter + ' + -->'); // end wrapper append
@@ -64,6 +73,9 @@ $(document).ready(function() {
 
         resultDiv.append("<h4>Results</h4>");
 
+        resultVolumeLeftDiv.empty();
+        volLeftCheckbox.prop('checked', false);
+
         var totalVol = $("#totalVolume").val();
 
         if(!totalVol){
@@ -72,16 +84,17 @@ $(document).ready(function() {
 
         totalVol = parseFloat(totalVol.replace(",", ".")); // replace decimal comma with the decimal dot
 
-        var totalVolUnit = $("#totalVolumeUnit").val();
+        totalVolUnit = $("#totalVolumeUnit").val();
 
 
 
-        var volumeLeft = totalVol;
+        volumeLeft = totalVol;
 
         for(var i = 1; i < componentCounter+1; i++) {
             var comName = $("#componentName"+i).val();
             var stockCon = $("#stockCon"+i).val();
             var desiredCon = $("#desiredCon"+i).val();
+            var stockConUnit = $("#stockConcentrationUnit"+i).val();
 
             if(comName && stockCon && desiredCon) {
                 stockCon = parseFloat(stockCon.replace(",", ".")); // replace decimal comma with the decimal dot
@@ -92,7 +105,17 @@ $(document).ready(function() {
 
                 $("#desiredResult").val(calc);
 
-                resultDiv.append("<p>" + comName + " = " + calc.toFixed(4) + " " + totalVolUnit + "</p>");
+                if(stockConUnit == "% (weight/volume)") {
+                    if(totalVolUnit == "ml") {
+                        desConUnit = "g";
+                    } else {
+                        desConUnit = "mg";
+                    }
+                } else {
+                    desConUnit = totalVolUnit
+                }
+
+                resultDiv.append("<p>" + comName + " = " + calc.toFixed(4) + " " + desConUnit + "</p>");
 
                 volumeLeft -= calc;
             } else {
@@ -100,8 +123,17 @@ $(document).ready(function() {
             }
         }
 
-        resultDiv.append("<p><strong>Total volume left = " + volumeLeft.toFixed(4) + " " + totalVolUnit + "</strong></p>");
+        volLeftCheckboxDiv.show();
     });
 
-
+    // volume left
+    $(volLeftCheckbox).on('change', function() {
+        if($(volLeftCheckbox).prop('checked')) {
+            resultVolumeLeftDiv.append("<strong>= " + volumeLeft.toFixed(4) + " " + totalVolUnit + "</strong>");
+            resultVolumeLeftDiv.show();
+        } else {
+            resultVolumeLeftDiv.hide();
+            resultVolumeLeftDiv.empty();
+        }
+    });
 });
